@@ -6,11 +6,11 @@ var realChown = fs.chown;
 fs.chown = function(path, uid, gid, callback) {
   try {
     realChown(path, uid, gid, function (er) {
-      if (er) console.trace('chown failed async', er, uid, gid)
+      if (er) console.trace('chown failed async', er, path, uid, gid)
       if (callback) callback(er)
     })
   } catch (er) {
-    if (er) console.trace('chown failed', er, uid, gid, callback && callback.toString())
+    if (er) console.trace('chown failed', er, path, uid, gid, '\n')
     throw er
   }
 }
@@ -20,7 +20,7 @@ fs.chownSync = function(path, uid, gid) {
   try {
     fs.chownSync(path, uid, gid);
   } catch (er) {
-    if (er) console.trace('chownSync failed', er, uid, gid)
+    if (er) console.trace('chownSync failed', er, path, uid, gid)
     throw er
   }
 }
