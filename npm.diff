@@ -1,24 +1,60 @@
-diff --git a/lib/cache.js b/lib/cache.js
-index 5ad07dfdcdbe..74c711928e0c 100644
---- a/lib/cache.js
-+++ b/lib/cache.js
-@@ -357,6 +357,7 @@ function afterAdd (cb) {
-     log.verbose('afterAdd', pj, 'not in flight; writing')
+diff --git a/lib/install.js b/lib/install.js
+index 4c3d0def78a7..b2b02382d5f7 100644
+--- a/lib/install.js
++++ b/lib/install.js
+@@ -492,6 +492,7 @@ Installer.prototype.executeActions = function (cb) {
  
-     getStat(function (er, cs) {
-+      console.log('getStat() -> ', cs);
-       if (er) return done(er)
-       writeFileAtomic(pj, JSON.stringify(data), { chown: cs }, function (er) {
-         if (!er) log.verbose('afterAdd', pj, 'written')
-diff --git a/lib/utils/correct-mkdir.js b/lib/utils/correct-mkdir.js
-index 68c4a4ad79ae..8815ec140608 100644
---- a/lib/utils/correct-mkdir.js
-+++ b/lib/utils/correct-mkdir.js
-@@ -28,6 +28,7 @@ module.exports = function correctMkdir (path, cb) {
-     }
+   var self = this
+   chain(steps, function (er) {
++    if (er) console.log('chain er executeActions -> ', er);
+     if (!er || self.rollback) {
+       rimraf(staging, function () { cb(er) })
+     } else {
+diff --git a/lib/install/action/extract.js b/lib/install/action/extract.js
+index 60aae036c28c..4b42cf198d0a 100644
+--- a/lib/install/action/extract.js
++++ b/lib/install/action/extract.js
+@@ -17,17 +17,20 @@ module.exports = function (top, buildpath, pkg, log, next) {
+   var up = npm.config.get('unsafe-perm')
+   var user = up ? null : npm.config.get('user')
+   var group = up ? null : npm.config.get('group')
++  console.log('action/extract: ug = ', user, group)
+   cache.unpack(pkg.package.name, pkg.package.version, buildpath, null, null, user, group,
+         andUpdatePackageJson(pkg, buildpath, andStageBundledChildren(pkg, buildpath, log, next)))
+ }
  
-     var ownerStats = calculateOwner()
-+    console.trace('ownerStats, st = ', ownerStats, st)
-     // there's always a chance the permissions could have been frobbed, so fix
-     if (st.uid !== ownerStats.uid) {
-       stats[path] = ownerStats
+ function andUpdatePackageJson (pkg, buildpath, next) {
++  console.log('andUpdatePackageJson', pkg, buildpath)
+   return iferr(next, function () {
+     updatePackageJson(pkg, buildpath, next)
+   })
+ }
+ 
+ function andStageBundledChildren (pkg, buildpath, log, next) {
++  console.log('andStageBundledChildren', pkg, buildpath)
+   var staging = path.resolve(buildpath, '..')
+   return iferr(next, function () {
+     for (var i = 0; i < pkg.children.length; ++i) {
+diff --git a/lib/install/update-package-json.js b/lib/install/update-package-json.js
+index eee530c3cd80..3132a1e677c4 100644
+--- a/lib/install/update-package-json.js
++++ b/lib/install/update-package-json.js
+@@ -42,5 +42,6 @@ module.exports = function (mod, buildpath, next) {
+ 
+   var data = JSON.stringify(sortedObject(pkg), null, 2) + '\n'
+ 
++  console.log('write file atomic in update-package-json', path.resolve(buildpath, 'package.json'))
+   writeFileAtomic(path.resolve(buildpath, 'package.json'), data, next)
+ }
+diff --git a/lib/utils/tar.js b/lib/utils/tar.js
+index f580c8e05dee..a6d62304987d 100644
+--- a/lib/utils/tar.js
++++ b/lib/utils/tar.js
+@@ -363,6 +363,7 @@ function gunzTarPerm (tarball, target, dMode, fMode, uid, gid, cb_) {
+     return true
+   }
+ 
++  console.log('extractOpts = ', extractOpts)
+   fst
+     .on('error', function (er) {
+       if (er) log.error('tar.unpack', 'error reading ' + tarball)
