@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var fs = require('fs');
+var fs = require('graceful-fs');
 console.log('H')
 console.error('X')
 var realChown = fs.chown;
@@ -10,7 +10,7 @@ fs.chown = function(path, uid, gid, callback) {
       if (callback) callback(er)
     })
   } catch (er) {
-    if (er) console.trace('chown failed', er, uid, gid)
+    if (er) console.trace('chown failed', er, uid, gid, callback && callback.toString())
     throw er
   }
 }
