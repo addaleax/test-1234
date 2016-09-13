@@ -1,4 +1,13 @@
 #!/usr/bin/env node
+var fs = require('fs');
+var realChown = fs.chown;
+fs.chown = function(path, uid, gid, callback) {
+  realChown(path, uid, gid, function (er) {
+    if (er) console.trace('chown failed', er, uid, git)
+    if (callback) callback(er)
+  })
+}
+
 ;(function () { // wrapper in case we're in module_context mode
   // windows: running "npm blah" in this folder will invoke WSH, not node.
   /*global WScript*/
