@@ -1,0 +1,24 @@
+diff --git a/lib/cache.js b/lib/cache.js
+index 5ad07dfdcdbe..74c711928e0c 100644
+--- a/lib/cache.js
++++ b/lib/cache.js
+@@ -357,6 +357,7 @@ function afterAdd (cb) {
+     log.verbose('afterAdd', pj, 'not in flight; writing')
+ 
+     getStat(function (er, cs) {
++      console.log('getStat() -> ', cs);
+       if (er) return done(er)
+       writeFileAtomic(pj, JSON.stringify(data), { chown: cs }, function (er) {
+         if (!er) log.verbose('afterAdd', pj, 'written')
+diff --git a/lib/utils/correct-mkdir.js b/lib/utils/correct-mkdir.js
+index 68c4a4ad79ae..8815ec140608 100644
+--- a/lib/utils/correct-mkdir.js
++++ b/lib/utils/correct-mkdir.js
+@@ -28,6 +28,7 @@ module.exports = function correctMkdir (path, cb) {
+     }
+ 
+     var ownerStats = calculateOwner()
++    console.trace('ownerStats, st = ', ownerStats, st)
+     // there's always a chance the permissions could have been frobbed, so fix
+     if (st.uid !== ownerStats.uid) {
+       stats[path] = ownerStats
