@@ -6,8 +6,6 @@ node_js:
 install:
   - id
   - id nobody
-  - npm install -g npm@3.10.8
-  - (cd $(dirname $(which npm))/../lib/node_modules/npm && patch -p1) < npm.diff
-  - cat < ./npm-cli.js > "$(which npm)"
+  - npm install -g npm@3.10.7
 script:
   - sudo npm install -g ios-sim
