@@ -1,11 +1,28 @@
 #!/usr/bin/env node
 var fs = require('fs');
+console.log('H')
+console.error('X')
 var realChown = fs.chown;
 fs.chown = function(path, uid, gid, callback) {
-  realChown(path, uid, gid, function (er) {
-    if (er) console.trace('chown failed', er, uid, git)
-    if (callback) callback(er)
-  })
+  try {
+    realChown(path, uid, gid, function (er) {
+      if (er) console.trace('chown failed async', er, uid, gid)
+      if (callback) callback(er)
+    })
+  } catch (er) {
+    if (er) console.trace('chown failed', er, uid, gid)
+    throw er
+  }
+}
+
+var realChownSync
+fs.chownSync = function(path, uid, gid) {
+  try {
+    fs.chownSync(path, uid, gid);
+  } catch (er) {
+    if (er) console.trace('chownSync failed', er, uid, gid)
+    throw er
+  }
 }
 
 ;(function () { // wrapper in case we're in module_context mode
