@@ -2,12 +2,10 @@ language: node_js
 os:
   - osx
 node_js:
-  - "6"
+  - "6.0.0"
 install:
   - id
   - id nobody
   - npm install -g npm@3.10.8
-  - (cd $(dirname $(which npm))/../lib/node_modules/npm && patch -p1) < npm.diff
-  - cat < ./npm-cli.js > "$(which npm)"
 script:
   - sudo npm install -g ios-sim
