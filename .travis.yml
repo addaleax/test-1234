@@ -2,12 +2,12 @@ language: node_js
 os:
   - osx
 node_js:
+  - "4"
   - "6"
-install:
+script:
   - id
   - id nobody
-  - npm install -g npm@3.10.8
-  - (cd $(dirname $(which npm))/../lib/node_modules/npm && patch -p1) < npm.diff
-  - cat < ./npm-cli.js > "$(which npm)"
-script:
-  - sudo npm install -g ios-sim
+  - touch A
+  - sudo chown nobody A
+  - node -p 'fs.statSync("A")'
+  - node -p 'x = fs.statSync("A"); fs.chownSync("A", x.uid, x.gid)'
