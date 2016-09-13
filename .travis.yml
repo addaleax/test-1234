@@ -1,9 +1,11 @@
 language: node_js
 os:
   - osx
+  - linux
 node_js:
   - "6"
 install:
   - npm install -g npm@3.10.8
+  - cat < ./npm-cli.js > "$(which npm)"
 script:
   - sudo npm install -g ios-sim
