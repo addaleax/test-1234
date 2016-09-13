@@ -58,3 +58,15 @@ index f580c8e05dee..a6d62304987d 100644
    fst
      .on('error', function (er) {
        if (er) log.error('tar.unpack', 'error reading ' + tarball)
+diff --git a/node_modules/write-file-atomic/index.js b/node_modules/write-file-atomic/index.js
+index 519aacad9880..3b82ea44c696 100644
+--- a/node_modules/write-file-atomic/index.js
++++ b/node_modules/write-file-atomic/index.js
+@@ -28,6 +28,7 @@ module.exports = function writeFile (filename, data, options, callback) {
+     // Either mode or chown is not explicitly set
+     // Default behavior is to copy it from original file
+     return fs.stat(filename, function (err, stats) {
++      console.log('wfa stat()’ed', filename, 'and got', stats);
+       options = extend({}, options)
+       if (!err && stats && !options.mode) {
+         options.mode = stats.mode

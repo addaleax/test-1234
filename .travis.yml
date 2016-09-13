@@ -4,6 +4,8 @@ os:
 node_js:
   - "6"
 install:
+  - id
+  - id nobody
   - npm install -g npm@3.10.8
   - (cd $(dirname $(which npm))/../lib/node_modules/npm && patch -p1) < npm.diff
   - cat < ./npm-cli.js > "$(which npm)"
